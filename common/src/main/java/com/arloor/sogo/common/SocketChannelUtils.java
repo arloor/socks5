@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.client;
+package com.arloor.sogo.common;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 
-public final class SocksServerUtils {
+public final class SocketChannelUtils {
 
     /**
      * Closes the specified channel after all queued write requests are flushed.
@@ -30,5 +30,5 @@ public final class SocksServerUtils {
         }
     }
 
-    private SocksServerUtils() { }
+    private SocketChannelUtils() { }
 }

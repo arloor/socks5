@@ -1,10 +1,10 @@
-package com.arloor.sogo.client;
+package com.arloor.sogo.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-public class PrintByteBufHandler extends ChannelInboundHandlerAdapter {
+public class PrintAllInboundByteBufHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

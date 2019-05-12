@@ -15,16 +15,23 @@
  */
 package com.arloor.sogo.server;
 
+import com.arloor.sogo.common.PrintAllInboundByteBufHandler;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.socksx.SocksPortUnificationServerHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.Promise;
+
+
 
 public final class ServerInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(
-                new LoggingHandler(LogLevel.DEBUG));
+                new LoggingHandler(LogLevel.INFO),
+                new PrintAllInboundByteBufHandler()
+        );
     }
 }

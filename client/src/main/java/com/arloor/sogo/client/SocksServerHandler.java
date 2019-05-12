@@ -64,7 +64,7 @@ public final class SocksServerHandler extends SimpleChannelInboundHandler<SocksM
                     }else{
                         logger.warn("Error auth from "+ctx.channel().remoteAddress()+" === "+authRequest.username()+"/"+authRequest.password());
                         ctx.write(new DefaultSocks5PasswordAuthResponse(Socks5PasswordAuthStatus.FAILURE));
-                        SocksServerUtils.closeOnFlush(ctx.channel());
+                        SocketChannelUtils.closeOnFlush(ctx.channel());
                     }
                 } else if (socksRequest instanceof Socks5CommandRequest) {
                     Socks5CommandRequest socks5CmdRequest = (Socks5CommandRequest) socksRequest;
@@ -93,6 +93,6 @@ public final class SocksServerHandler extends SimpleChannelInboundHandler<SocksM
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) {
         throwable.printStackTrace();
-        SocksServerUtils.closeOnFlush(ctx.channel());
+        SocketChannelUtils.closeOnFlush(ctx.channel());
     }
 }

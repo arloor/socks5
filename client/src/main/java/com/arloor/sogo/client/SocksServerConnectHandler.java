@@ -67,7 +67,7 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                             } else {
                                 ctx.channel().writeAndFlush(
                                         new DefaultSocks4CommandResponse(Socks4CommandStatus.REJECTED_OR_FAILED));
-                                SocksServerUtils.closeOnFlush(ctx.channel());
+                                SocketChannelUtils.closeOnFlush(ctx.channel());
                             }
                         }
                     });
@@ -91,7 +91,7 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                         ctx.channel().writeAndFlush(
                                 new DefaultSocks4CommandResponse(Socks4CommandStatus.REJECTED_OR_FAILED)
                         );
-                        SocksServerUtils.closeOnFlush(ctx.channel());
+                        SocketChannelUtils.closeOnFlush(ctx.channel());
                     }
                 }
             });
@@ -116,7 +116,7 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                                     public void operationComplete(ChannelFuture channelFuture) {
                                         ctx.pipeline().remove(SocksServerConnectHandler.this);
                                         //todo:修改成包裹http的
-//                                        outboundChannel.pipeline().addLast(new PrintByteBufHandler());
+//                                        outboundChannel.pipeline().addLast(new PrintAllInboundByteBufHandler());
                                         outboundChannel.pipeline().addLast(new HttpResponseDecoder());
 
                                         outboundChannel.pipeline().addLast(new RelayHandler(ctx.channel()));
@@ -127,7 +127,7 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                             } else {
                                 ctx.channel().writeAndFlush(new DefaultSocks5CommandResponse(
                                         Socks5CommandStatus.FAILURE, request.dstAddrType()));
-                                SocksServerUtils.closeOnFlush(ctx.channel());
+                                SocketChannelUtils.closeOnFlush(ctx.channel());
                             }
                         }
                     });
@@ -150,7 +150,7 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                         logger.error("connect to: "+proxyAddr+":"+port+" failed! == "+ExceptionUtil.getMessage(future.cause()));
                         ctx.channel().writeAndFlush(
                                 new DefaultSocks5CommandResponse(Socks5CommandStatus.FAILURE, request.dstAddrType()));
-                        SocksServerUtils.closeOnFlush(ctx.channel());
+                        SocketChannelUtils.closeOnFlush(ctx.channel());
                     }
                 }
             });
@@ -161,6 +161,6 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        SocksServerUtils.closeOnFlush(ctx.channel());
+        SocketChannelUtils.closeOnFlush(ctx.channel());
     }
 }

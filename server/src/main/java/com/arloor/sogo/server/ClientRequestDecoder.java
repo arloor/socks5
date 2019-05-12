@@ -1,5 +1,6 @@
-package com.arloor.sogo.client;
+package com.arloor.sogo.server;
 
+import com.arloor.sogo.common.SocketChannelUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
@@ -11,8 +12,18 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class HttpResponseDecoder extends ByteToMessageDecoder {
-    private static Logger logger= LoggerFactory.getLogger(HttpResponseDecoder.class);
+//POST /target?at=AMeVrMaYq7NWq7eYrdPYra== HTTP/1.1
+//        Host: qtgwuehaoisdhuaishdaisuhdasiuhlassjd.com
+//        Authorization: Basic YTpi
+//        Accept: */*
+//Content-Type: text/plain
+//accept-encoding: gzip, deflate
+//content-length: 265
+
+//todo:修改这个类
+
+public class ClientRequestDecoder extends ByteToMessageDecoder {
+    private static Logger logger= LoggerFactory.getLogger(ClientRequestDecoder.class);
     private byte[] headStore=new byte[74];
     private final static byte[] validHead="HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ".getBytes();
 

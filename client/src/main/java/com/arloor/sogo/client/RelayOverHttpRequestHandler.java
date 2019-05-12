@@ -75,7 +75,7 @@ public final class RelayOverHttpRequestHandler extends ChannelInboundHandlerAdap
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         if (relayChannel.isActive()) {
-            SocksServerUtils.closeOnFlush(relayChannel);
+            SocketChannelUtils.closeOnFlush(relayChannel);
         }
     }
 

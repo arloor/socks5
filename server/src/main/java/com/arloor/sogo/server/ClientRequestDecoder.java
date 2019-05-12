@@ -136,6 +136,12 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                 });
                 headers.remove("content-length");
                 state=State.START;
+//                byte[] bytes=new byte[buf.readableBytes()];
+//                buf.markReaderIndex();
+//                buf.readBytes(bytes);
+//                buf.resetReaderIndex();
+//                System.out.println(new String(bytes));
+
                 //todo
                 //out.add()
         }

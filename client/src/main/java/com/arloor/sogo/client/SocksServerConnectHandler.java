@@ -16,6 +16,7 @@
 package com.arloor.sogo.client;
 
 import com.arloor.sogo.common.ExceptionUtil;
+import com.arloor.sogo.common.RelayHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;

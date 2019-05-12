@@ -26,6 +26,7 @@ public final class SocketChannelUtils {
      */
     public static void closeOnFlush(Channel ch) {
         if (ch.isActive()) {
+            System.out.println("关闭到"+ch.remoteAddress());
             ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
         }
     }

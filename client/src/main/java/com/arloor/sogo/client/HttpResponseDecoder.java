@@ -1,5 +1,7 @@
 package com.arloor.sogo.client;
 
+import ch.qos.logback.core.encoder.ByteArrayUtil;
+import com.arloor.sogo.common.ByteArrayUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
@@ -28,13 +30,7 @@ public class HttpResponseDecoder extends ByteToMessageDecoder {
         slice.markReaderIndex();
         slice.readBytes(headStore);
         slice.resetReaderIndex();
-
-        for (int i = 0; i < validHead.length; i++) {
-            if(headStore[i]!=validHead[i]){
-                return false;
-            }
-        }
-        return true;
+        return ByteArrayUtils.startWith(headStore,validHead);
     }
 
     @Override

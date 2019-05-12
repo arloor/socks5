@@ -128,65 +128,16 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                 if(in.readableBytes()<contentLength){
                     return;
                 }
-
                 ByteBuf slice=in.readSlice(contentLength);
                 ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
                 slice.forEachByte(value -> {
                     buf.writeByte(~value);
                     return true;
                 });
-
-
-                //下面开始处理连接到远程服务器
-                if(toTargetChannel==null){
-                    if("POST".equals(mehtod)&&fakeHost.equals(headers.get("Host"))&&path.startsWith("/target?at=")){
-                        String hostAndPort=new String(Objects.requireNonNull(MyBase64.decode(path.substring(11).getBytes())));
-                        String host=hostAndPort.substring(0,hostAndPort.indexOf(":"));
-                        int port=Integer.parseInt(hostAndPort.substring(hostAndPort.indexOf(":")+1));
-
-
-                        final Channel inboundChannel = ctx.channel();
-                        Bootstrap b=new Bootstrap();
-                        b.group(inboundChannel.eventLoop())
-                                .channel(NioSocketChannel.class)
-                                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000)
-                                .option(ChannelOption.SO_KEEPALIVE, true)
-                                .handler(new ChannelInitializer<SocketChannel>() {
-                                    @Override
-                                    protected void initChannel(SocketChannel ch) throws Exception {
-//                                        ch.pipeline().addLast(new PrintAllInboundByteBufHandler());
-                                        ch.pipeline().addLast(new RelayOverHttpResponseHandler(ctx.channel()));
-                                    }
-                                });
-
-                        b.connect(host, port).addListener(new ChannelFutureListener() {
-                            @Override
-                            public void operationComplete(ChannelFuture future) throws Exception {
-                                if (future.isSuccess()) {
-                                    ctx.pipeline().addLast(new PrintAllInboundByteBufHandler());
-                                    ctx.pipeline().addLast(new RelayHandler(future.channel()));
-                                    Thread.sleep(1000);
-                                    System.out.println(future.channel().isActive()+" "+future.channel().remoteAddress());
-//                                    System.out.println(future.channel().pipeline().get(PrintAllInboundByteBufHandler.class));
-                                    out.add(buf);
-                                } else {
-                                    // Close the connection if the connection attempt has failed.
-                                    logger.error("connect to: "+host+":"+port+" failed! == "+ ExceptionUtil.getMessage(future.cause()));
-                                }
-                            }
-                        });
-                    }else{
-                        //不是正常的客户端请求，应该转移到混淆网站，现在先直接关闭
-                        logger.error("应转移到混淆网站，先关闭连接！ 来自："+ctx.channel().remoteAddress());
-                        SocketChannelUtils.closeOnFlush(ctx.channel());
-                        return;
-                    }
-                }else{
-                    out.add(buf);
-                }
                 headers.remove("content-length");
                 state=State.START;
-
+                //todo
+                //out.add()
         }
     }
 }

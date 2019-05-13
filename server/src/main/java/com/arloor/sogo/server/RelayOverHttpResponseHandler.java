@@ -24,19 +24,17 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class RelayOverHttpResponseHandler extends ChannelInboundHandlerAdapter {
-
+    private static Logger logger = LoggerFactory.getLogger(RelayOverHttpResponseHandler.class);
     private final static String fakeHost="qtgwuehaoisdhuaishdaisuhdasiuhlassjd.com";
 
-    private String targetAddr;
-    private int targetPort;
     private final Channel relayChannel;
 
     public RelayOverHttpResponseHandler(Channel relayChannel) {
         this.relayChannel = relayChannel;
-        this.targetAddr="";
-        this.targetPort=10;
     }
 
     @Override
@@ -50,7 +48,6 @@ public final class RelayOverHttpResponseHandler extends ChannelInboundHandlerAda
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         ctx.writeAndFlush(Unpooled.EMPTY_BUFFER);
-
     }
 
     @Override
@@ -75,7 +72,7 @@ public final class RelayOverHttpResponseHandler extends ChannelInboundHandlerAda
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        System.out.println(ctx.channel().remoteAddress()+"关闭连接");
+        logger.info("主动关闭:"+ctx.channel().remoteAddress()+"--被动关闭:"+relayChannel.remoteAddress());
         if (relayChannel.isActive()) {
             SocketChannelUtils.closeOnFlush(relayChannel);
         }

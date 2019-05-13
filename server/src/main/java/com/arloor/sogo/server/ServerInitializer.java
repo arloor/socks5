@@ -32,7 +32,8 @@ public final class ServerInitializer extends ChannelInitializer<SocketChannel> {
         ch.pipeline().addLast(
 //                new LoggingHandler(LogLevel.INFO),
 //                new PrintAllInboundByteBufHandler(),
-                new ClientRequestDecoder()
+                new ClientRequestDecoder(),
+                new ProxyConnectionHandler(ch)
         );
     }
 }

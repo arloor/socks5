@@ -32,20 +32,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public final class SogoServerBootstrap {
+    public static final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     private static Logger logger= LoggerFactory.getLogger(SogoServerBootstrap.class);
 
-//    {
-//        "ServerPort": 80,
-//            "RedirctAddr": "www.grove.co.uk:80",
-//            "Users": [
-//        {
-//            "UserName": "a",
-//                "Password": "b"
-//        }
-//  ],
-//        "Dev":true
-//    }
 
     private static int serverPort;
     private static String redirctAddr;
@@ -110,7 +100,7 @@ public final class SogoServerBootstrap {
         System.out.println("=========================START PROXY!=============================");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)

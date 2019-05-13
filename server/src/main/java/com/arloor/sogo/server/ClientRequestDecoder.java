@@ -11,6 +11,9 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.socksx.v5.DefaultSocks5CommandResponse;
 import io.netty.handler.codec.socksx.v5.Socks5CommandStatus;
 import io.netty.util.ByteProcessor;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.FutureListener;
+import io.netty.util.concurrent.Promise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +42,6 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
     private String mehtod;
     private Map<String,String> headers=new HashMap<>();
     private final static String fakeHost="qtgwuehaoisdhuaishdaisuhdasiuhlassjd.com";
-    private SocketChannel toTargetChannel=null;
 
     private final static String head1="GET";
     private final static String head2="POST";
@@ -48,24 +50,6 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
     private enum State{
         START,HEADER,CRLFCRLF,CONTENT
     }
-
-
-//    //检查响应的其实部分是否正确
-//    private boolean headValid(ByteBuf slice){
-//        slice.markReaderIndex();
-//        slice.readBytes(headStore);
-//        slice.resetReaderIndex();
-//
-//        for (int i = 0; i < validHead.length; i++) {
-//            if(headStore[i]!=validHead[i]){
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-
-
-
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         switch (state){
@@ -92,7 +76,6 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                        SocketChannelUtils.closeOnFlush(ctx.channel());
                        return;
                    }
-//                    System.out.println(cs);
                 }else{return;}
             case HEADER:
                 while(headers.get("content-length")==null){
@@ -136,14 +119,15 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                 });
                 headers.remove("content-length");
                 state=State.START;
-//                byte[] bytes=new byte[buf.readableBytes()];
-//                buf.markReaderIndex();
-//                buf.readBytes(bytes);
-//                buf.resetReaderIndex();
-//                System.out.println(new String(bytes));
-
-                //todo
-                //out.add()
+                if(path.startsWith("/target?at=")){
+                    String hostAndPort=new String(Objects.requireNonNull(MyBase64.decode(path.substring(11).getBytes())));
+                    int splitIndex=hostAndPort.indexOf(":");
+                    String host=hostAndPort.substring(0,splitIndex);
+                    int port=Integer.parseInt(hostAndPort.substring(splitIndex+1));
+                    Request request=new Request(host,port,buf);
+                    //todo
+                    out.add(request);
+                }
         }
     }
 }

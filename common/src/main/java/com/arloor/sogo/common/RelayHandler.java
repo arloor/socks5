@@ -56,7 +56,6 @@ public final class RelayHandler extends ChannelInboundHandlerAdapter {
         if (relayChannel.isActive()) {
             SocketChannelUtils.closeOnFlush(relayChannel);
         }
-        System.out.println(ctx.channel().remoteAddress()+"关闭连接");
     }
 
     @Override

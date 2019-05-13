@@ -85,8 +85,16 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                     }
                     in.readerIndex(newIndex);
                     newIndex=in.forEachByte(ByteProcessor.FIND_CR);
+                    if(newIndex==-1){
+                        return;
+                    }
                     int length=newIndex-in.readerIndex();
-                    in.readBytes(tempByteStore,0,length);
+                    try {
+                        in.readBytes(tempByteStore,0,length);
+                    }catch (IllegalArgumentException e){
+                        System.out.println(e);
+                    }
+
                     String header=new String(tempByteStore,0,length);
                     int split=header.indexOf(": ");
                     if(split!=-1&&split<header.length()-2){

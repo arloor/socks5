@@ -15,6 +15,7 @@
  */
 package com.arloor.sogo.common;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -45,6 +46,7 @@ public final class RelayHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (relayChannel.isActive()) {
+            SoutBytebuf.print((ByteBuf) msg);
             relayChannel.writeAndFlush(msg);
         } else {
             ReferenceCountUtil.release(msg);

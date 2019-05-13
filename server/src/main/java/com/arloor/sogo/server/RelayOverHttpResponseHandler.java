@@ -15,8 +15,8 @@
  */
 package com.arloor.sogo.server;
 
-import com.arloor.sogo.common.MyBase64;
 import com.arloor.sogo.common.SocketChannelUtils;
+import com.arloor.sogo.common.SoutBytebuf;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
@@ -57,7 +57,7 @@ public final class RelayOverHttpResponseHandler extends ChannelInboundHandlerAda
             ByteBuf content=(ByteBuf)msg;
 
 
-            SoutBytebuf.print(content);
+            System.out.println(content.readableBytes());
 
             ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
             buf.writeBytes("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ".getBytes());

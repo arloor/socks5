@@ -1,15 +1,14 @@
 package com.arloor.sogo.server;
 
-import com.arloor.sogo.common.PrintAllInboundByteBufHandler;
 import com.arloor.sogo.common.SocketChannelUtils;
+import com.arloor.sogo.common.SoutBytebuf;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,16 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
     private SocketChannel remoteChannel = null;
     private SocketChannel localChannel = null;
     private ChannelFuture hostConnectFuture;
+    private String s="GET / HTTP/1.1\r\n" +
+            "Host: arloor.com\r\n" +
+            "Connection: keep-alive\r\n" +
+            "Upgrade-Insecure-Requests: 1\r\n" +
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36\r\n" +
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3\r\n" +
+            "Referer: http://arloor.com/\r\n" +
+            "Accept-Encoding: gzip, deflate\r\n" +
+            "Accept-Language: zh,en;q=0.9,zh-CN;q=0.8\r\n" +
+            "Cookie: _ga=GA1.2.1006490496.1556092145; _gid=GA1.2.1861383052.1557043297; _gat=1\r\n\r\n";
 
 
     private ByteBuf content = PooledByteBufAllocator.DEFAULT.buffer();
@@ -54,28 +63,25 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-
-
-        SoutBytebuf.print(content);
-
-        if (host != null) {//可能是空的readComplete事件
-            if (remoteChannel != null) {
+        if(content.readableBytes()!=0&&host!=null){
+            if(remoteChannel==null)
+                connectTarget();
+            else {
                 content.retain();
-                remoteChannel.writeAndFlush(content);
-                content.clear();
-            } else {
-                if (hostConnectFuture == null) {//进行连接
-                    hostConnectFuture = connectTarget();
-                }
-                hostConnectFuture.addListener(future -> {
-                    if (future.isSuccess()) {
-                        content.retain();
-                        remoteChannel.writeAndFlush(content);
-                        content.clear();
+                remoteChannel.writeAndFlush(content).addListener(future2 -> {
+                    if(future2.isSuccess()){
+                        logger.info("写道远程成功22222");
+                    }else{
+                        logger.info("写到远程失败2222222"+future2.cause());
                     }
+                    content.clear();
                 });
             }
         }
+
+
+
+
 //        super.channelReadComplete(ctx);
     }
 
@@ -100,13 +106,21 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         remoteChannel = ch;
-//                        ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
                         ch.pipeline().addLast(new RelayOverHttpResponseHandler(localChannel));
                     }
                 });
         ChannelFuture future = bootstrap.connect(host, port);
         future.addListener(future1 -> {
             if (future1.isSuccess()) {
+                content.retain();
+                remoteChannel.writeAndFlush(content).addListener(future2 -> {
+                    if(future2.isSuccess()){
+                        logger.info("写道远程成功1111");
+                    }else{
+                        logger.info("写到远程失败1111"+future2.cause());
+                    }
+                    content.clear();
+                });
                 logger.info("连接成功: " + host + ":" + port + " <FROM> " + localChannel.remoteAddress());
             } else {
                 logger.error("连接失败: " + host + ":" + port + " <FROM> " + localChannel.remoteAddress());

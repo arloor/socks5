@@ -1,4 +1,4 @@
-package com.arloor.sogo.server;
+package com.arloor.sogo.common;
 
 import io.netty.buffer.ByteBuf;
 
@@ -9,6 +9,6 @@ public class SoutBytebuf {
         content.readBytes(bytes);
         content.resetReaderIndex();
         String payloadStr = new String(bytes);
-        System.out.println(payloadStr);
+        System.out.println(payloadStr+"<end===========================");
     }
 }

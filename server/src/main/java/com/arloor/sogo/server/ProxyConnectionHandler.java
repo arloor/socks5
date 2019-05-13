@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
     private static Logger logger = LoggerFactory.getLogger(ProxyConnectionHandler.class);
     private SocketChannel remoteChannel = null;
-    private SocketChannel localChannel=null;
+    private SocketChannel localChannel = null;
     private ChannelFuture hostConnectFuture;
 
 
@@ -42,10 +42,10 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof Request) {
-            Request request=((Request) msg);
+            Request request = ((Request) msg);
             ByteBuf buf = request.getPayload();
-            host=request.getHost();
-            port=request.getPort();
+            host = request.getHost();
+            port = request.getPort();
             content.writeBytes(buf);
             ReferenceCountUtil.release(msg);
         }
@@ -56,12 +56,9 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
 
 
-//        byte[] bytes = new byte[content.readableBytes()];
-//        content.markReaderIndex();
-//        content.readBytes(bytes);
-//        content.resetReaderIndex();
-//        String payloadStr=new String(bytes);
-        if(host!=null){//可能是空的readComplete事件
+        SoutBytebuf.print(content);
+
+        if (host != null) {//可能是空的readComplete事件
             if (remoteChannel != null) {
                 content.retain();
                 remoteChannel.writeAndFlush(content);
@@ -71,7 +68,7 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
                     hostConnectFuture = connectTarget();
                 }
                 hostConnectFuture.addListener(future -> {
-                    if(future.isSuccess()){
+                    if (future.isSuccess()) {
                         content.retain();
                         remoteChannel.writeAndFlush(content);
                         content.clear();
@@ -86,10 +83,10 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) {
         ReferenceCountUtil.release(content);
         if (remoteChannel != null && remoteChannel.isActive()) {
-            logger.info("主动关闭："+ctx.channel().remoteAddress()+"--被动关闭"+remoteChannel.remoteAddress());
+            logger.info("主动关闭：" + ctx.channel().remoteAddress() + "--被动关闭" + remoteChannel.remoteAddress());
             SocketChannelUtils.closeOnFlush(remoteChannel);
-        }else{
-            logger.info("主动关闭："+ctx.channel().remoteAddress());
+        } else {
+            logger.info("主动关闭：" + ctx.channel().remoteAddress());
         }
     }
 
@@ -107,12 +104,12 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
                         ch.pipeline().addLast(new RelayOverHttpResponseHandler(localChannel));
                     }
                 });
-        ChannelFuture future=bootstrap.connect(host, port);
+        ChannelFuture future = bootstrap.connect(host, port);
         future.addListener(future1 -> {
             if (future1.isSuccess()) {
-                logger.info("连接成功: " + host + ":" + port+" <FROM> "+localChannel.remoteAddress());
+                logger.info("连接成功: " + host + ":" + port + " <FROM> " + localChannel.remoteAddress());
             } else {
-                logger.error("连接失败: " + host + ":" + port+" <FROM> "+localChannel.remoteAddress());
+                logger.error("连接失败: " + host + ":" + port + " <FROM> " + localChannel.remoteAddress());
                 SocketChannelUtils.closeOnFlush(localChannel);
             }
         });

@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public final class SogoServerBootstrap {
-    public static final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    public static final EventLoopGroup workerGroup = new NioEventLoopGroup(4);
 
     private static Logger logger= LoggerFactory.getLogger(SogoServerBootstrap.class);
 

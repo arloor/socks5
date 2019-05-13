@@ -55,6 +55,10 @@ public final class RelayOverHttpResponseHandler extends ChannelInboundHandlerAda
         //"HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: "+strconv.Itoa(len(buf))+"\r\n\r\n"
         if (relayChannel.isActive()) {
             ByteBuf content=(ByteBuf)msg;
+
+
+            SoutBytebuf.print(content);
+
             ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
             buf.writeBytes("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ".getBytes());
             buf.writeBytes(String.valueOf(content.readableBytes()).getBytes());

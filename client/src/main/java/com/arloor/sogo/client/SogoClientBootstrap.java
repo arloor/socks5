@@ -38,6 +38,7 @@ public final class SogoClientBootstrap {
     public static String user;
     public static String pass;
     public static String basicAuth;
+    public static boolean auth;
 
 
 
@@ -79,6 +80,7 @@ public final class SogoClientBootstrap {
         remotePort=serverInfo.getInteger("ProxyPort");
         remoteHost=serverInfo.getString("ProxyAddr");
         basicAuth= Base64.getEncoder().encodeToString((serverInfo.getString("UserName")+":"+serverInfo.getString("Password")).getBytes());
+        auth=config.getBoolean("Auth");
         System.out.println();
         System.out.println();
     }

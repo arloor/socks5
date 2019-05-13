@@ -51,10 +51,15 @@ public final class SocksServerHandler extends SimpleChannelInboundHandler<SocksM
             case SOCKS5:
                 if (socksRequest instanceof Socks5InitialRequest) {
                     // auth support example
-//                    ctx.pipeline().addFirst(new Socks5PasswordAuthRequestDecoder());
-//                    ctx.write(new DefaultSocks5InitialResponse(Socks5AuthMethod.PASSWORD));
-                    ctx.pipeline().addFirst(new Socks5CommandRequestDecoder());
-                    ctx.write(new DefaultSocks5InitialResponse(Socks5AuthMethod.NO_AUTH));
+                    if(SogoClientBootstrap.auth){//需要密码认证
+                        ctx.pipeline().addFirst(new Socks5PasswordAuthRequestDecoder());
+                        ctx.write(new DefaultSocks5InitialResponse(Socks5AuthMethod.PASSWORD));
+                    }else{//不需要密码认证
+                        ctx.pipeline().addFirst(new Socks5CommandRequestDecoder());
+                        ctx.write(new DefaultSocks5InitialResponse(Socks5AuthMethod.NO_AUTH));
+                    }
+
+
                 } else if (socksRequest instanceof Socks5PasswordAuthRequest) {
 
                     Socks5PasswordAuthRequest authRequest=(Socks5PasswordAuthRequest) socksRequest;

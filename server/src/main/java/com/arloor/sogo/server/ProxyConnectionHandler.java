@@ -63,22 +63,23 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        if(content.readableBytes()!=0&&host!=null){
-            if(remoteChannel==null)
+        if(host!=null&&content.readableBytes()!=0){
+            if(remoteChannel==null){
                 connectTarget();
-            else {
+            }else if(remoteChannel.isActive()){
                 content.retain();
                 remoteChannel.writeAndFlush(content).addListener(future2 -> {
                     if(future2.isSuccess()){
-                        logger.info("写道远程成功22222");
+                        logger.info("写道远程成功222");
                     }else{
-                        logger.info("写到远程失败2222222"+future2.cause());
+                        logger.info("写到远程失败222"+future2.cause());
                     }
                     content.clear();
                 });
+            }else {
+                logger.error("outbounder unactive");
             }
         }
-
 
 
 

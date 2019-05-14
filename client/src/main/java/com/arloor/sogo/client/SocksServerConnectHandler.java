@@ -16,6 +16,7 @@
 package com.arloor.sogo.client;
 
 import com.arloor.sogo.common.ExceptionUtil;
+import com.arloor.sogo.common.ReadAllBytebufInboundHandler;
 import com.arloor.sogo.common.RelayHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -122,6 +123,7 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
 
                                         outboundChannel.pipeline().addLast(new RelayHandler(ctx.channel()));
                                         logger.info(request.dstAddr()+":"+request.dstPort()+"  <FROM>  "+ctx.channel().remoteAddress());
+                                        ctx.pipeline().addLast(new ReadAllBytebufInboundHandler());
                                         ctx.pipeline().addLast(new RelayOverHttpRequestHandler(outboundChannel,request.dstAddr(),request.dstPort()));
                                     }
                                 });

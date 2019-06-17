@@ -16,6 +16,9 @@
 package com.arloor.sogo.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.arloor.sogo.common.ExceptionUtil;
+import com.arloor.sogo.common.RelayHandler;
+import com.arloor.sogo.common.SocketChannelUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -94,7 +97,7 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                             } else {
                                 ctx.channel().writeAndFlush(new DefaultSocks5CommandResponse(
                                         Socks5CommandStatus.FAILURE, request.dstAddrType()));
-                                SocksServerUtils.closeOnFlush(ctx.channel());
+                                SocketChannelUtils.closeOnFlush(ctx.channel());
                             }
                         }
                     });
@@ -114,10 +117,10 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
 //                        System.out.println("连接成功");
                     } else {
                         // Close the connection if the connection attempt has failed.
-                        logger.error("connect to: "+remoteHost+":"+remotePort+" failed! == "+ExceptionUtil.getMessage(future.cause()));
+                        logger.error("connect to: "+remoteHost+":"+remotePort+" failed! == "+ ExceptionUtil.getMessage(future.cause()));
                         ctx.channel().writeAndFlush(
                                 new DefaultSocks5CommandResponse(Socks5CommandStatus.FAILURE, request.dstAddrType()));
-                        SocksServerUtils.closeOnFlush(ctx.channel());
+                        SocketChannelUtils.closeOnFlush(ctx.channel());
                     }
                 }
             });
@@ -128,6 +131,6 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        SocksServerUtils.closeOnFlush(ctx.channel());
+        SocketChannelUtils.closeOnFlush(ctx.channel());
     }
 }

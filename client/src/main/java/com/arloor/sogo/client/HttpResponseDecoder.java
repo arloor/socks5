@@ -1,5 +1,6 @@
 package com.arloor.sogo.client;
 
+import com.arloor.sogo.common.SocketChannelUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
@@ -45,7 +46,7 @@ public class HttpResponseDecoder extends ByteToMessageDecoder {
                 if(in.readableBytes()>=74){//如果不以 “"HTTP/1.1 200 OK。。。。。"”开始则直接点开连接
                     if(!headValid(in)){
                         logger.error("来自服务器的错误的响应。请检查sogo.json配置");
-                        SocksServerUtils.closeOnFlush(ctx.channel());
+                        SocketChannelUtils.closeOnFlush(ctx.channel());
                         return;
                     }
                 }

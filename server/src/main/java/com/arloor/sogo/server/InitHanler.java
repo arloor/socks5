@@ -8,9 +8,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InitHanler extends ChannelInboundHandlerAdapter {
     private SocketChannel remoteChannel;
+    private static Logger logger= LoggerFactory.getLogger(InitHanler.class.getSimpleName());
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -40,8 +43,9 @@ public class InitHanler extends ChannelInboundHandlerAdapter {
                    if (future1.isSuccess()){
                        ctx.pipeline().remove(InitHanler.class);
                        ctx.pipeline().addLast(new RelayPayloadHandler(remoteChannel));
-                       System.out.println(ctx.pipeline().names());
+//                       System.out.println(ctx.pipeline().names());
                        ctx.channel().writeAndFlush(Unpooled.wrappedBuffer("check".getBytes()));
+                       logger.info("建立通道："+ctx.channel().remoteAddress()+"<--->"+remoteChannel.remoteAddress());
                    }else {
                        ctx.close();
                    }

@@ -38,38 +38,26 @@ public final class SocksServerHandler extends SimpleChannelInboundHandler<SocksM
                 //不处理sock4,直接关闭channel
                 logger.warn("socks4 request from"+ctx.channel().remoteAddress());
                 ctx.close();
-                //正常处理sock4
-//                Socks4CommandRequest socksV4CmdRequest = (Socks4CommandRequest) socksRequest;
-//                if (socksV4CmdRequest.type() == Socks4CommandType.CONNECT) {
-//                    ctx.pipeline().addLast(new SocksServerConnectHandler());
-//                    ctx.pipeline().remove(this);
-//                    ctx.fireChannelRead(socksRequest);
-//                } else {
-//                    ctx.close();
-//                }
                 break;
             case SOCKS5:
                 if (socksRequest instanceof Socks5InitialRequest) {
-                    // auth support example
-                    if(SogoClientBootstrap.auth){//需要密码认证
+                    if(SogoClientBootStrap.auth){//需要密码认证
                         ctx.pipeline().addFirst(new Socks5PasswordAuthRequestDecoder());
                         ctx.write(new DefaultSocks5InitialResponse(Socks5AuthMethod.PASSWORD));
                     }else{//不需要密码认证
                         ctx.pipeline().addFirst(new Socks5CommandRequestDecoder());
                         ctx.write(new DefaultSocks5InitialResponse(Socks5AuthMethod.NO_AUTH));
                     }
-
-
                 } else if (socksRequest instanceof Socks5PasswordAuthRequest) {
 
                     Socks5PasswordAuthRequest authRequest=(Socks5PasswordAuthRequest) socksRequest;
-                    if(authRequest.username().equals(SogoClientBootstrap.user)&&authRequest.password().equals(SogoClientBootstrap.pass)){
+                    if(authRequest.username().equals(SogoClientBootStrap.user)&&authRequest.password().equals(SogoClientBootStrap.pass)){
                         ctx.pipeline().addFirst(new Socks5CommandRequestDecoder());
                         ctx.write(new DefaultSocks5PasswordAuthResponse(Socks5PasswordAuthStatus.SUCCESS));
                     }else{
                         logger.warn("Error auth from "+ctx.channel().remoteAddress()+" === "+authRequest.username()+"/"+authRequest.password());
                         ctx.write(new DefaultSocks5PasswordAuthResponse(Socks5PasswordAuthStatus.FAILURE));
-                        SocketChannelUtils.closeOnFlush(ctx.channel());
+                        SocksServerUtils.closeOnFlush(ctx.channel());
                     }
                 } else if (socksRequest instanceof Socks5CommandRequest) {
                     Socks5CommandRequest socks5CmdRequest = (Socks5CommandRequest) socksRequest;
@@ -98,6 +86,6 @@ public final class SocksServerHandler extends SimpleChannelInboundHandler<SocksM
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) {
         throwable.printStackTrace();
-        SocketChannelUtils.closeOnFlush(ctx.channel());
+        SocksServerUtils.closeOnFlush(ctx.channel());
     }
 }

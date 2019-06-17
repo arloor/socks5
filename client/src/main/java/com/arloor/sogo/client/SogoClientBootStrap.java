@@ -16,6 +16,7 @@
 package com.arloor.sogo.client;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
@@ -26,19 +27,18 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Base64;
 
-public final class SogoClientBootstrap {
+public final class SogoClientBootStrap {
 
-    private static Logger logger= LoggerFactory.getLogger(SogoClientBootstrap.class);
+    private static Logger logger= LoggerFactory.getLogger(SogoClientBootStrap.class);
 
     private static int localPort =1080;
-    public static int remotePort =80;
-    public static String remoteHost;
+
+    public static int use=-1;
     public static String user;
     public static String pass;
-    public static String basicAuth;
     public static boolean auth;
+    public static JSONArray servers;
 
 
 
@@ -59,7 +59,7 @@ public final class SogoClientBootstrap {
         }else{
             //        读取jar中resources下的sogo.json
             System.out.println("config @classpath:sogo.json");
-            BufferedReader in = new BufferedReader(new InputStreamReader(SogoClientBootstrap.class.getClassLoader().getResourceAsStream("sogo.json")));
+            BufferedReader in = new BufferedReader(new InputStreamReader(SogoClientBootStrap.class.getClassLoader().getResourceAsStream("sogo.json")));
             StringBuffer buffer = new StringBuffer();
             String line = "";
             while ((line = in.readLine()) != null){
@@ -71,16 +71,13 @@ public final class SogoClientBootstrap {
 
         System.out.println("config : "+config);
 
-
         localPort =config.getInteger("ClientPort");
         user=config.getString("User");
         pass=config.getString("Pass");
-        int use=config.getInteger("Use");
-        JSONObject serverInfo=config.getJSONArray("Servers").getJSONObject(use);
-        remotePort=serverInfo.getInteger("ProxyPort");
-        remoteHost=serverInfo.getString("ProxyAddr");
-        basicAuth= Base64.getEncoder().encodeToString((serverInfo.getString("UserName")+":"+serverInfo.getString("Password")).getBytes());
         auth=config.getBoolean("Auth");
+        use=config.getInteger("Use");
+        servers=config.getJSONArray("Servers");
+
         System.out.println();
         System.out.println();
     }
@@ -102,9 +99,9 @@ public final class SogoClientBootstrap {
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
+                    .channel(NioServerSocketChannel.class)
 //             .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new SocksServerInitializer());
+                    .childHandler(new SocksServerInitializer());
             b.bind(localPort).sync().channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();

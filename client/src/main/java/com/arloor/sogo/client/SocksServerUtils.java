@@ -19,7 +19,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 
-public final class SocketChannelUtils {
+public final class SocksServerUtils {
 
     /**
      * Closes the specified channel after all queued write requests are flushed.
@@ -30,5 +30,5 @@ public final class SocketChannelUtils {
         }
     }
 
-    private SocketChannelUtils() { }
+    private SocksServerUtils() { }
 }

@@ -1,7 +1,5 @@
 package com.arloor.sogo.client;
 
-import ch.qos.logback.core.encoder.ByteArrayUtil;
-import com.arloor.sogo.common.ByteArrayUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,18 +28,24 @@ public class HttpResponseDecoder extends ByteToMessageDecoder {
         slice.markReaderIndex();
         slice.readBytes(headStore);
         slice.resetReaderIndex();
-        return ByteArrayUtils.startWith(headStore,validHead);
+
+        for (int i = 0; i < validHead.length; i++) {
+            if(headStore[i]!=validHead[i]){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
 
         switch (state){
             case START:
                 if(in.readableBytes()>=74){//如果不以 “"HTTP/1.1 200 OK。。。。。"”开始则直接点开连接
                     if(!headValid(in)){
                         logger.error("来自服务器的错误的响应。请检查sogo.json配置");
-                        SocketChannelUtils.closeOnFlush(ctx.channel());
+                        SocksServerUtils.closeOnFlush(ctx.channel());
                         return;
                     }
                 }

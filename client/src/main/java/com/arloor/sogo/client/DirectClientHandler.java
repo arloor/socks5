@@ -61,6 +61,12 @@ public final class DirectClientHandler extends ChannelInboundHandlerAdapter {
             }
         }
 
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) {
+            ctx.close();
+            promise.setFailure(throwable);
+        }
+
 
     }
 

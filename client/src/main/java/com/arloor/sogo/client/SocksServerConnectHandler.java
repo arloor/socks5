@@ -81,7 +81,6 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     .handler(new DirectClientHandler(promise));
 
-//            b.connect(proxyAddr, port).addListener(new ChannelFutureListener() {
             b.connect(request.dstAddr(), request.dstPort()).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
@@ -120,11 +119,9 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                                         //todo:修改成包裹http的
 //                                        outboundChannel.pipeline().addLast(new PrintAllInboundByteBufHandler());
                                         outboundChannel.pipeline().addLast(new HttpResponseDecoder());
-
                                         outboundChannel.pipeline().addLast(new RelayHandler(ctx.channel()));
                                         logger.info(request.dstAddr()+":"+request.dstPort()+"  <FROM>  "+ctx.channel().remoteAddress());
-                                        ctx.pipeline().addLast(new ReadAllBytebufInboundHandler());
-                                        ctx.pipeline().addLast(new RelayOverHttpRequestHandler(outboundChannel,request.dstAddr(),request.dstPort()));
+                                        ctx.pipeline().addLast(new RelayHandler(outboundChannel));
                                     }
                                 });
                             } else {

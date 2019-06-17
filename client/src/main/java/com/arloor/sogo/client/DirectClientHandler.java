@@ -30,6 +30,7 @@ public final class DirectClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        ctx.pipeline().addLast(new RelayOverHttpRequestHandler(request.dstAddr(),request.dstPort());
         ctx.pipeline().remove(this);
         promise.setSuccess(ctx.channel());
     }

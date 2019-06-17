@@ -20,68 +20,36 @@ import com.arloor.sogo.common.SoutBytebuf;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
 import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class RelayOverHttpResponseHandler extends ChannelInboundHandlerAdapter {
+public final class RelayOverHttpResponseHandler extends ChannelOutboundHandlerAdapter {
     private static Logger logger = LoggerFactory.getLogger(RelayOverHttpResponseHandler.class);
     private final static String fakeHost="qtgwuehaoisdhuaishdaisuhdasiuhlassjd.com";
 
-    private final Channel relayChannel;
-
-    public RelayOverHttpResponseHandler(Channel relayChannel) {
-        this.relayChannel = relayChannel;
-    }
 
     @Override
-    public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-        boolean canWrite = ctx.channel().isWritable();
-        //流量控制，不允许继续读
-        relayChannel.config().setAutoRead(canWrite);
-        super.channelWritabilityChanged(ctx);
-    }
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-        ctx.writeAndFlush(Unpooled.EMPTY_BUFFER);
-    }
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        //"HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: "+strconv.Itoa(len(buf))+"\r\n\r\n"
-        if (relayChannel.isActive()) {
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+        if(msg instanceof ByteBuf){
             ByteBuf content=(ByteBuf)msg;
-
-
-            System.out.println(content.readableBytes());
-
-            ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
-            buf.writeBytes("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ".getBytes());
-            buf.writeBytes(String.valueOf(content.readableBytes()).getBytes());
-            buf.writeBytes("\r\n\r\n".getBytes());
-            content.forEachByte(value -> {
-                buf.writeByte(~value);
-                return true;
-            });
-            relayChannel.writeAndFlush(buf);
-            ReferenceCountUtil.release(content);
-        } else {
-            ReferenceCountUtil.release(msg);
+            if(content.readableBytes()==0){
+                ctx.writeAndFlush(content,promise);
+            }else {
+                ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
+                buf.writeBytes("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ".getBytes());
+                buf.writeBytes(String.valueOf(content.readableBytes()).getBytes());
+                buf.writeBytes("\r\n\r\n".getBytes());
+                content.forEachByte(value -> {
+                    buf.writeByte(~value);
+                    return true;
+                });
+                ctx.writeAndFlush(buf,promise);
+                ReferenceCountUtil.release(content);
+            }
         }
     }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        logger.info("主动关闭:"+ctx.channel().remoteAddress()+"--被动关闭:"+relayChannel.remoteAddress());
-        if (relayChannel.isActive()) {
-            SocketChannelUtils.closeOnFlush(relayChannel);
-        }
-    }
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();

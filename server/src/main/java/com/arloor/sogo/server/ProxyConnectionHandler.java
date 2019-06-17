@@ -107,7 +107,7 @@ public class ProxyConnectionHandler extends ChannelInboundHandlerAdapter {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         remoteChannel = ch;
-                        ch.pipeline().addLast(new RelayOverHttpResponseHandler(localChannel));
+                        ch.pipeline().addLast(new RelayOverHttpResponseHandler());
                     }
                 });
         ChannelFuture future = bootstrap.connect(host, port);

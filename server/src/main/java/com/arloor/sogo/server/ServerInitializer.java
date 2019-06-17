@@ -30,10 +30,12 @@ public final class ServerInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(
-//                new LoggingHandler(LogLevel.INFO),
-//                new PrintAllInboundByteBufHandler(),
+                new RelayOverHttpResponseHandler(),
+
                 new ClientRequestDecoder(),
-                new ProxyConnectionHandler(ch)
+//                new LoggingHandler(LogLevel.INFO),
+                new InitHanler()
+//                new ProxyConnectionHandler(ch)
         );
     }
 }

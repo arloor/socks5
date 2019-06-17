@@ -98,6 +98,11 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                     String header=new String(tempByteStore,0,length);
                     int split=header.indexOf(": ");
                     if(split!=-1&&split<header.length()-2){
+                        if(header.substring(0,split).equals("Host")&&!header.substring(split+2).equals(fakeHost)) {
+                            logger.error("非法host字段，关闭 "+ctx.channel().remoteAddress());
+                            SocketChannelUtils.closeOnFlush(ctx.channel());
+                            return;
+                        }
                         headers.put(header.substring(0,split),header.substring(split+2));
                     }else {
                         logger.error("这。。不符合契约，关闭 "+ctx.channel().remoteAddress());

@@ -17,6 +17,8 @@ package com.arloor.socks5.server;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 
 public final class ServerInitializer extends ChannelInitializer<SocketChannel> {
@@ -24,7 +26,6 @@ public final class ServerInitializer extends ChannelInitializer<SocketChannel> {
     public void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(
                 new RelayOverHttpResponseHandler(),
-
                 new ClientRequestDecoder(),
 //                new LoggingHandler(LogLevel.INFO),
                 new InitHanler()

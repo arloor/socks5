@@ -3,7 +3,7 @@
   "Use": 1,
   "Servers": [
     {
-      "ProxyAddr": "socks5",
+      "ProxyAddr": "hk.ddnspod.xyz",
       "ProxyPort": 80,
       "UserName": "a",
       "Password": "b"

@@ -2,7 +2,6 @@ package com.arloor.socks5.server;
 
 import com.arloor.socks5.common.MyBase64;
 import com.arloor.socks5.common.SocketChannelUtils;
-import com.arloor.socks5.common.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
@@ -34,6 +33,8 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
     private byte[] tempByteStore=new byte[tempByteStoreLength];
     private String path;
     private String mehtod;
+    private byte[] oudContent;
+    private byte[] newContent;
     private Map<String,String> headers=new HashMap<>();
     private final static String fakeHost="qtgwuehaoisdhuaishdaisuhdasiuhlassjd.com";
 
@@ -46,19 +47,27 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
     }
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+
+        newContent=new byte[in.readableBytes()];
+        in.markReaderIndex();
+        in.readBytes(newContent);
+        in.resetReaderIndex();
+
         switch (state){
             case START:
                 int index=in.forEachByte(ByteProcessor.FIND_CR);
                 if(index!=-1){
                     int length=index-in.readerIndex();
+                    in.markReaderIndex();
                     in.readBytes(tempByteStore,0,length);
                     String initLine=new String(tempByteStore,0,length);
                     if(initLine.endsWith(end)&&(initLine.startsWith(head1)||initLine.startsWith(head2))){
                        int index1=initLine.indexOf(" ");
                        int index2=initLine.lastIndexOf(" ");
                        if(index2==index1){
-                           logger.error("不是一个GET/POST请求，关闭连接！内容：["+initLine+"] 来自："+ctx.channel().remoteAddress());
-                           SocketChannelUtils.closeOnFlush(ctx.channel());
+                           logger.error("【非\"A B C\"三段式initline】不是一个GET/POST请求，关闭连接！内容：["+initLine+"] 来自："+ctx.channel().remoteAddress());
+                           in.resetReaderIndex();
+                           ctx.close();
                            return;
                        }else{
                            path=initLine.substring(index1+1,index2);
@@ -66,8 +75,12 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                            state=State.HEADER;
                        }
                    }else{
-                        logger.error("不是一个GET/POST请求，关闭连接！内容：["+initLine+"] 来自："+ctx.channel().remoteAddress());
-                        SocketChannelUtils.closeOnFlush(ctx.channel());
+                        logger.error("【开头结尾不对】不是一个GET/POST请求，关闭连接！内容：["+initLine+"] 来自："+ctx.channel().remoteAddress());
+                        logger.error("内容：\n"+new String(newContent).substring(0,4)+"....");
+                        String s=new String(oudContent);
+                        logger.error("旧内容： \n...."+s.substring(s.length()-4));
+                        in.resetReaderIndex();
+                        ctx.close();
                        return;
                    }
                 }else{return;}
@@ -119,6 +132,11 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                     return;
                 }
                 ByteBuf slice=in.readSlice(contentLength);
+                oudContent =new byte[slice.readableBytes()];
+                slice.markReaderIndex();
+                slice.readBytes(oudContent);
+                slice.resetReaderIndex();
+
                 ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
                 slice.forEachByte(value -> {
                     buf.writeByte(~value);

@@ -40,7 +40,7 @@ import java.util.Random;
 //@ChannelHandler.Sharable
 public final class SocksServerConnectHandler extends SimpleChannelInboundHandler<SocksMessage> {
 
-    private static Logger logger= LoggerFactory.getLogger(SocksServerConnectHandler.class);
+    private static Logger logger= LoggerFactory.getLogger(SocksServerConnectHandler.class.getSimpleName());
 
     private  int remotePort=80;
     private  String remoteHost;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.client;
+package com.arloor.socks5.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 
-public final class SogoClientBootStrap {
+public final class ClientBootStrap {
 
-    private static Logger logger= LoggerFactory.getLogger(SogoClientBootStrap.class);
+    private static Logger logger= LoggerFactory.getLogger(ClientBootStrap.class);
 
     private static int localPort =1080;
 
@@ -58,8 +58,8 @@ public final class SogoClientBootStrap {
             outputStream.close();
         }else{
             //        读取jar中resources下的sogo.json
-            System.out.println("config @classpath:sogo.json");
-            BufferedReader in = new BufferedReader(new InputStreamReader(SogoClientBootStrap.class.getClassLoader().getResourceAsStream("sogo.json")));
+            System.out.println("config @classpath:client.json");
+            BufferedReader in = new BufferedReader(new InputStreamReader(ClientBootStrap.class.getClassLoader().getResourceAsStream("client.json")));
             StringBuffer buffer = new StringBuffer();
             String line = "";
             while ((line = in.readLine()) != null){
@@ -83,8 +83,8 @@ public final class SogoClientBootStrap {
     }
 
     public static void printUsage(){
-        System.out.println("> Usage: java -jar xxx.jar [-c sogo.json]");
-        System.out.println("> if \"sogo.json\" path is not set, it will the default sogo.json in classpath");
+        System.out.println("> Usage: java -jar xxx.jar [-c client.json]");
+        System.out.println("> if \"client.json\" path is not set, it will the default client.json in classpath");
         System.out.println("> which listen on 6666;and connect to proxy:80 whith auth: youwillneveruse/thissock5");
         System.out.println();
     }
@@ -92,7 +92,7 @@ public final class SogoClientBootStrap {
     public static void main(String[] args) throws Exception {
         printUsage();
         initConfig(args);
-        System.out.println("=========================START PROXY!=============================");
+        System.out.println("=========================START Client!=============================");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();

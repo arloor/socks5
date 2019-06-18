@@ -13,12 +13,11 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.server;
+package com.arloor.socks5.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -31,10 +30,10 @@ import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 
-public final class SogoServerBootstrap {
+public final class ServerBootstrap {
     public static final EventLoopGroup workerGroup = new NioEventLoopGroup(4);
 
-    private static Logger logger= LoggerFactory.getLogger(SogoServerBootstrap.class);
+    private static Logger logger= LoggerFactory.getLogger(ServerBootstrap.class);
 
 
     private static int serverPort;
@@ -59,8 +58,8 @@ public final class SogoServerBootstrap {
             outputStream.close();
         }else{
             //        读取jar中resources下的sogo.json
-            System.out.println("config @classpath:sogo-server.json");
-            BufferedReader in = new BufferedReader(new InputStreamReader(SogoServerBootstrap.class.getClassLoader().getResourceAsStream("sogo-server.json")));
+            System.out.println("config @classpath:server.json");
+            BufferedReader in = new BufferedReader(new InputStreamReader(ServerBootstrap.class.getClassLoader().getResourceAsStream("server.json")));
             StringBuffer buffer = new StringBuffer();
             String line = "";
             while ((line = in.readLine()) != null){
@@ -88,8 +87,8 @@ public final class SogoServerBootstrap {
     }
 
     public static void printUsage(){
-        System.out.println("> Usage: java -jar xxx.jar [-c sogo-server.json]");
-        System.out.println("> if \"sogo-server.json\" path is not set, it will the default sogo-server.json in classpath");
+        System.out.println("> Usage: java -jar xxx.jar [-c server.json]");
+        System.out.println("> if \"server.json\" path is not set, it will the default server.json in classpath");
         System.out.println("> which listen on 80; and allow user \"a\" with passwd \"b\" to connect this proxy");
         System.out.println();
     }
@@ -97,12 +96,12 @@ public final class SogoServerBootstrap {
     public static void main(String[] args) throws Exception {
         printUsage();
         initConfig(args);
-        System.out.println("=========================START PROXY!=============================");
+        System.out.println("=========================START Server!=============================");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
 
         try {
-            ServerBootstrap b = new ServerBootstrap();
+            io.netty.bootstrap.ServerBootstrap b = new io.netty.bootstrap.ServerBootstrap();
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
 //             .handler(new LoggingHandler(LogLevel.INFO))

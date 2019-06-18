@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.client;
+package com.arloor.socks5.client;
 
-import com.arloor.sogo.common.MyBase64;
+import com.arloor.socks5.common.MyBase64;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;

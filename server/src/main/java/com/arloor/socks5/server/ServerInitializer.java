@@ -13,22 +13,22 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.common;
+package com.arloor.socks5.server;
 
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
 
-public final class SocketChannelUtils {
 
-    /**
-     * Closes the specified channel after all queued write requests are flushed.
-     */
-    public static void closeOnFlush(Channel ch) {
-        if (ch.isActive()) {
-            ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
-        }
+public final class ServerInitializer extends ChannelInitializer<SocketChannel> {
+    @Override
+    public void initChannel(SocketChannel ch) throws Exception {
+        ch.pipeline().addLast(
+                new RelayOverHttpResponseHandler(),
+
+                new ClientRequestDecoder(),
+//                new LoggingHandler(LogLevel.INFO),
+                new InitHanler()
+//                new ProxyConnectionHandler(ch)
+        );
     }
-
-    private SocketChannelUtils() { }
 }

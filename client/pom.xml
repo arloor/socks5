@@ -38,7 +38,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.arloor.sogo.client.SogoClientBootStrap</mainClass>
+                            <mainClass>com.arloor.socks5.client.ClientBootStrap</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -56,7 +56,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.arloor.sogo.client.SogoClientBootStrap</mainClass>
+                            <mainClass>com.arloor.socks5.client.ClientBootStrap</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

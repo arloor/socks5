@@ -1,4 +1,4 @@
-package com.arloor.sogo.server;
+package com.arloor.socks5.server;
 
 import io.netty.buffer.ByteBuf;
 

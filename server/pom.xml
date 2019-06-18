@@ -31,7 +31,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.arloor.sogo.server.SogoServerBootstrap</mainClass>
+                            <mainClass>com.arloor.socks5.server.ServerBootstrap</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -49,7 +49,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.arloor.sogo.server.SogoServerBootstrap</mainClass>
+                            <mainClass>com.arloor.socks5.server.ServerBootstrap</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

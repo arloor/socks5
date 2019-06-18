@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.client;
+package com.arloor.socks5.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.arloor.sogo.common.ExceptionUtil;
-import com.arloor.sogo.common.RelayHandler;
-import com.arloor.sogo.common.SocketChannelUtils;
+import com.arloor.socks5.common.ExceptionUtil;
+import com.arloor.socks5.common.RelayHandler;
+import com.arloor.socks5.common.SocketChannelUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -48,12 +48,12 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
 
     public SocksServerConnectHandler() {
         super();
-        int use= SogoClientBootStrap.use;
+        int use= ClientBootStrap.use;
         if(use==-1){
             Random rand = new Random();
-            use=rand.nextInt(SogoClientBootStrap.servers.size());
+            use=rand.nextInt(ClientBootStrap.servers.size());
         }
-        JSONObject serverInfo= SogoClientBootStrap.servers.getJSONObject(use);
+        JSONObject serverInfo= ClientBootStrap.servers.getJSONObject(use);
         remotePort=serverInfo.getInteger("ProxyPort");
         remoteHost=serverInfo.getString("ProxyAddr");
         basicAuth= Base64.getEncoder().encodeToString((serverInfo.getString("UserName")+":"+serverInfo.getString("Password")).getBytes());

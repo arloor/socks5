@@ -13,29 +13,20 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.server;
+package com.arloor.socks5.client;
 
-import com.arloor.sogo.common.PrintAllInboundByteBufHandler;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.socksx.SocksPortUnificationServerHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.concurrent.Promise;
 
-
-
-public final class ServerInitializer extends ChannelInitializer<SocketChannel> {
+public final class SocksServerInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(
-                new RelayOverHttpResponseHandler(),
-
-                new ClientRequestDecoder(),
-//                new LoggingHandler(LogLevel.INFO),
-                new InitHanler()
-//                new ProxyConnectionHandler(ch)
-        );
+                new LoggingHandler(LogLevel.DEBUG),
+                new SocksPortUnificationServerHandler(),
+                SocksServerHandler.INSTANCE);
     }
 }

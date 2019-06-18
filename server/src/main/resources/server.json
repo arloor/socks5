@@ -1,0 +1,11 @@
+{
+  "ServerPort": 80,
+  "RedirctAddr": "www.grove.co.uk:80",
+  "Users": [
+    {
+      "UserName": "a",
+      "Password": "b"
+    }
+  ],
+  "Dev":true
+}

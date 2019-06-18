@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.client;
+package com.arloor.socks5.client;
 
-import com.arloor.sogo.common.SocketChannelUtils;
+import com.arloor.socks5.common.SocketChannelUtils;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -23,8 +23,6 @@ import io.netty.handler.codec.socksx.SocksMessage;
 import io.netty.handler.codec.socksx.v5.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.nio.channels.SocketChannel;
 
 @ChannelHandler.Sharable
 public final class SocksServerHandler extends SimpleChannelInboundHandler<SocksMessage> {
@@ -44,7 +42,7 @@ public final class SocksServerHandler extends SimpleChannelInboundHandler<SocksM
                 break;
             case SOCKS5:
                 if (socksRequest instanceof Socks5InitialRequest) {
-                    if(SogoClientBootStrap.auth){//需要密码认证
+                    if(ClientBootStrap.auth){//需要密码认证
                         ctx.pipeline().addFirst(new Socks5PasswordAuthRequestDecoder());
                         ctx.write(new DefaultSocks5InitialResponse(Socks5AuthMethod.PASSWORD));
                     }else{//不需要密码认证
@@ -54,7 +52,7 @@ public final class SocksServerHandler extends SimpleChannelInboundHandler<SocksM
                 } else if (socksRequest instanceof Socks5PasswordAuthRequest) {
 
                     Socks5PasswordAuthRequest authRequest=(Socks5PasswordAuthRequest) socksRequest;
-                    if(authRequest.username().equals(SogoClientBootStrap.user)&&authRequest.password().equals(SogoClientBootStrap.pass)){
+                    if(authRequest.username().equals(ClientBootStrap.user)&&authRequest.password().equals(ClientBootStrap.pass)){
                         ctx.pipeline().addFirst(new Socks5CommandRequestDecoder());
                         ctx.write(new DefaultSocks5PasswordAuthResponse(Socks5PasswordAuthStatus.SUCCESS));
                     }else{

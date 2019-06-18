@@ -1,19 +1,13 @@
-package com.arloor.sogo.server;
+package com.arloor.socks5.server;
 
-import com.arloor.sogo.common.*;
-import io.netty.bootstrap.Bootstrap;
+import com.arloor.socks5.common.MyBase64;
+import com.arloor.socks5.common.SocketChannelUtils;
+import com.arloor.socks5.common.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import io.netty.handler.codec.socksx.v5.DefaultSocks5CommandResponse;
-import io.netty.handler.codec.socksx.v5.Socks5CommandStatus;
 import io.netty.util.ByteProcessor;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.FutureListener;
-import io.netty.util.concurrent.Promise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

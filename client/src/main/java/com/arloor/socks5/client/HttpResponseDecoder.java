@@ -1,6 +1,6 @@
-package com.arloor.sogo.client;
+package com.arloor.socks5.client;
 
-import com.arloor.sogo.common.SocketChannelUtils;
+import com.arloor.socks5.common.SocketChannelUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;

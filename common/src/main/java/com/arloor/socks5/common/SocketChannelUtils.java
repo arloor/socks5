@@ -13,20 +13,22 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.client;
+package com.arloor.socks5.common;
 
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.socksx.SocksPortUnificationServerHandler;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 
-public final class SocksServerInitializer extends ChannelInitializer<SocketChannel> {
-    @Override
-    public void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addLast(
-                new LoggingHandler(LogLevel.DEBUG),
-                new SocksPortUnificationServerHandler(),
-                SocksServerHandler.INSTANCE);
+public final class SocketChannelUtils {
+
+    /**
+     * Closes the specified channel after all queued write requests are flushed.
+     */
+    public static void closeOnFlush(Channel ch) {
+        if (ch.isActive()) {
+            ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+        }
     }
+
+    private SocketChannelUtils() { }
 }

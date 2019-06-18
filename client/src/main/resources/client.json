@@ -1,0 +1,21 @@
+{
+  "ClientPort": 6666,
+  "Use": 0,
+  "Servers": [
+    {
+      "ProxyAddr": "proxy",
+      "ProxyPort": 80,
+      "UserName": "a",
+      "Password": "b"
+    },
+    {
+      "ProxyAddr": "localhost",
+      "ProxyPort": 80,
+      "UserName": "a",
+      "Password": "b"
+    }
+  ],
+  "User": "youwillneveruse",
+  "Pass": "thissock5",
+  "Auth":false
+}

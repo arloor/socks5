@@ -13,13 +13,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.server;
+package com.arloor.socks5.server;
 
-import com.arloor.sogo.common.SocketChannelUtils;
-import com.arloor.sogo.common.SoutBytebuf;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;

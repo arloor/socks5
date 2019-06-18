@@ -1,13 +1,11 @@
-package com.arloor.sogo.server;
+package com.arloor.socks5.server;
 
-import com.arloor.sogo.common.RelayHandler;
+import com.arloor.socks5.common.RelayHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +24,7 @@ public class InitHanler extends ChannelInboundHandlerAdapter {
                    &&request.getPayload().readByte()=='t'
            ){
                Bootstrap bootstrap = new Bootstrap();
-               bootstrap.group(SogoServerBootstrap.workerGroup)
+               bootstrap.group(ServerBootstrap.workerGroup)
                        .channel(NioSocketChannel.class)
                        .option(ChannelOption.TCP_NODELAY, true)
                        .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)

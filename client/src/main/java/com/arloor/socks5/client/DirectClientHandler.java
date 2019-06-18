@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.arloor.sogo.client;
+package com.arloor.socks5.client;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

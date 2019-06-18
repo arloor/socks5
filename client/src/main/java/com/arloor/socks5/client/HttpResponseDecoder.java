@@ -81,7 +81,7 @@ public class HttpResponseDecoder extends ByteToMessageDecoder {
                     ByteBuf buf=in.readSlice(contentLength);
                     ByteBuf content = PooledByteBufAllocator.DEFAULT.buffer();
                     while(buf.isReadable()){
-                        content.writeByte((byte)~buf.readByte());
+                        content.writeByte(~buf.readByte());
                     }
                     out.add(content);
                     state= State.START;

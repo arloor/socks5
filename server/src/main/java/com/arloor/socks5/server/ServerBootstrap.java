@@ -31,7 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public final class ServerBootstrap {
-    public static final EventLoopGroup workerGroup = new NioEventLoopGroup(4);
+    public static final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     private static Logger logger= LoggerFactory.getLogger(ServerBootstrap.class);
 

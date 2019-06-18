@@ -1,9 +1,9 @@
 {
   "ClientPort": 6666,
-  "Use": 0,
+  "Use": 1,
   "Servers": [
     {
-      "ProxyAddr": "proxy",
+      "ProxyAddr": "socks5",
       "ProxyPort": 80,
       "UserName": "a",
       "Password": "b"

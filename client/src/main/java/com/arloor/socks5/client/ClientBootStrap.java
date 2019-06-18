@@ -30,7 +30,7 @@ import java.nio.file.Files;
 
 public final class ClientBootStrap {
 
-    private static Logger logger= LoggerFactory.getLogger(ClientBootStrap.class);
+    private static Logger logger= LoggerFactory.getLogger(ClientBootStrap.class.getSimpleName());
 
     private static int localPort =1080;
 

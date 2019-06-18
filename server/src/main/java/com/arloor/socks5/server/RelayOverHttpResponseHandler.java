@@ -39,7 +39,7 @@ public final class RelayOverHttpResponseHandler extends ChannelOutboundHandlerAd
                 buf.writeBytes(String.valueOf(content.readableBytes()).getBytes());
                 buf.writeBytes("\r\n\r\n".getBytes());
                 content.forEachByte(value -> {
-                    buf.writeByte(~value);
+                    buf.writeByte((byte)~value);
                     return true;
                 });
                 ctx.writeAndFlush(buf,promise);

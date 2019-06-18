@@ -139,7 +139,7 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
 
                 ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
                 slice.forEachByte(value -> {
-                    buf.writeByte(~value);
+                    buf.writeByte((byte)~value);
                     return true;
                 });
                 headers.remove("content-length");

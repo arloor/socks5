@@ -57,7 +57,7 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                        int index1=initLine.indexOf(" ");
                        int index2=initLine.lastIndexOf(" ");
                        if(index2==index1){
-                           logger.error("不是一个GET/POST请求，关闭连接！ 来自："+ctx.channel().remoteAddress());
+                           logger.error("不是一个GET/POST请求，关闭连接！内容：["+initLine+"] 来自："+ctx.channel().remoteAddress());
                            SocketChannelUtils.closeOnFlush(ctx.channel());
                            return;
                        }else{
@@ -66,8 +66,8 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                            state=State.HEADER;
                        }
                    }else{
-                       logger.error("不是一个GET/POST请求，关闭连接！ 来自："+ctx.channel().remoteAddress());
-                       SocketChannelUtils.closeOnFlush(ctx.channel());
+                        logger.error("不是一个GET/POST请求，关闭连接！内容：["+initLine+"] 来自："+ctx.channel().remoteAddress());
+                        SocketChannelUtils.closeOnFlush(ctx.channel());
                        return;
                    }
                 }else{return;}

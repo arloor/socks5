@@ -33,7 +33,7 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
     private byte[] tempByteStore=new byte[tempByteStoreLength];
     private String path;
     private String mehtod;
-    private byte[] oudContent;
+    private byte[] oldContent;
     private byte[] newContent;
     private Map<String,String> headers=new HashMap<>();
     private final static String fakeHost="qtgwuehaoisdhuaishdaisuhdasiuhlassjd.com";
@@ -48,10 +48,10 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
-        newContent=new byte[in.readableBytes()];
-        in.markReaderIndex();
-        in.readBytes(newContent);
-        in.resetReaderIndex();
+//        newContent=new byte[in.readableBytes()];
+//        in.markReaderIndex();
+//        in.readBytes(newContent);
+//        in.resetReaderIndex();
 
         switch (state){
             case START:
@@ -76,9 +76,9 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                        }
                    }else{
                         logger.error("【开头结尾不对】不是一个GET/POST请求，关闭连接！内容：["+initLine+"] 来自："+ctx.channel().remoteAddress());
-                        logger.error("内容：\n"+new String(newContent).substring(0,4)+"....");
-                        String s=new String(oudContent);
-                        logger.error("旧内容： \n...."+s.substring(s.length()-4));
+//                        logger.error("内容：\n"+new String(newContent).substring(0,4)+"....");
+//                        String s=new String(oldContent);
+//                        logger.error("旧内容： \n...."+s.substring(s.length()-4));
                         in.resetReaderIndex();
                         ctx.close();
                        return;
@@ -132,10 +132,10 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                     return;
                 }
                 ByteBuf slice=in.readSlice(contentLength);
-                oudContent =new byte[slice.readableBytes()];
-                slice.markReaderIndex();
-                slice.readBytes(oudContent);
-                slice.resetReaderIndex();
+//                oldContent =new byte[slice.readableBytes()];
+//                slice.markReaderIndex();
+//                slice.readBytes(oldContent);
+//                slice.resetReaderIndex();
 
                 ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
                 slice.forEachByte(value -> {

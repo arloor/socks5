@@ -49,10 +49,9 @@ public final class RelayOverHttpRequestHandler extends ChannelOutboundHandlerAda
             buf.writeBytes((" HTTP/1.1\r\nHost: " + fakeHost + "\r\nAuthorization: Basic " + basicAuth + "\r\nAccept: */*\r\nContent-Type: text/plain\r\naccept-encoding: gzip, deflate\r\ncontent-length: ").getBytes());
             buf.writeBytes(String.valueOf(content.readableBytes()).getBytes());
             buf.writeBytes("\r\n\r\n".getBytes());
-            content.forEachByte(value -> {
-                buf.writeByte((byte)~value);
-                return true;
-            });
+            while(content.isReadable()){
+                buf.writeByte((byte)~content.readByte());
+            }
             ctx.writeAndFlush(buf,promise);
             ReferenceCountUtil.release(content);
         }

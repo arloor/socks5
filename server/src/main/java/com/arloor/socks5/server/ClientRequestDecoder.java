@@ -138,10 +138,9 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
 //                slice.resetReaderIndex();
 
                 ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
-                slice.forEachByte(value -> {
-                    buf.writeByte((byte)~value);
-                    return true;
-                });
+                while(slice.isReadable()){
+                    buf.writeByte((byte)~slice.readByte());
+                }
                 headers.remove("content-length");
                 state=State.START;
                 if(path.startsWith("/target?at=")){

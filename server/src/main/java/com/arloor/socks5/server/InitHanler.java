@@ -6,6 +6,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class InitHanler extends ChannelInboundHandlerAdapter {
                    &&request.getPayload().readByte()=='i'
                    &&request.getPayload().readByte()=='t'
            ){
+               ReferenceCountUtil.release(request.getPayload());
                Bootstrap bootstrap = new Bootstrap();
                bootstrap.group(ServerBootstrap.workerGroup)
                        .channel(NioSocketChannel.class)
@@ -49,6 +51,8 @@ public class InitHanler extends ChannelInboundHandlerAdapter {
                    }
                });
 
+           }else{
+               ReferenceCountUtil.release(request.getPayload());
            }
        }
     }

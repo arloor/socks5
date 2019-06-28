@@ -45,7 +45,7 @@ public class InitHanler extends ChannelInboundHandlerAdapter {
                         ctx.pipeline().addLast(new RelayPayloadHandler(remoteChannel));
 //                       System.out.println(ctx.pipeline().names());
                         ctx.channel().writeAndFlush(Unpooled.wrappedBuffer("check".getBytes()));
-                        logger.info("Tunnel Established：" + ctx.channel().remoteAddress() + "<--->" + remoteChannel.remoteAddress());
+                        logger.info(remoteChannel.remoteAddress().getHostString()+":"+remoteChannel.remoteAddress().getPort() + "  <<<<<<<  " + ctx.channel().remoteAddress());
                     } else {
                         ctx.close();
                     }

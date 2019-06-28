@@ -51,7 +51,6 @@ public final class DirectClientHandler extends ChannelInboundHandlerAdapter {
     private class CheckConnectedHandler extends SimpleChannelInboundHandler<ByteBuf> {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-            //todo:检测是否连接完毕。
             if(msg.readableBytes()==5
                     &&msg.readByte()=='c'
                     &&msg.readByte()=='h'

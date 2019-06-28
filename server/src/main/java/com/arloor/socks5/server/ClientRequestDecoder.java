@@ -23,7 +23,6 @@ import java.util.Objects;
 //accept-encoding: gzip, deflate
 //content-length: 265
 
-//todo:修改这个类
 
 public class ClientRequestDecoder extends ByteToMessageDecoder {
     private static Logger logger= LoggerFactory.getLogger(ClientRequestDecoder.class);
@@ -120,23 +119,18 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                 contentLength=Integer.parseInt(headers.get("content-length"));
                 state=State.CRLFCRLF;
             case CRLFCRLF:
-                int newIndex=in.forEachByte(ByteProcessor.FIND_NON_CRLF);
-                if(newIndex==-1){
+                //读取固定4个byte，越过\r\n\r\n
+                if(in.readableBytes()<4){
                     return;
                 }else {
-                    in.readerIndex(newIndex);
-                    state=State.CONTENT;
+                    in.readerIndex(in.readerIndex()+4);
+                    state= State.CONTENT;
                 }
             case CONTENT:
                 if(in.readableBytes()<contentLength){
                     return;
                 }
                 ByteBuf slice=in.readSlice(contentLength);
-//                oldContent =new byte[slice.readableBytes()];
-//                slice.markReaderIndex();
-//                slice.readBytes(oldContent);
-//                slice.resetReaderIndex();
-
                 ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();
                 while(slice.isReadable()){
                     buf.writeByte(~slice.readByte());
@@ -149,7 +143,6 @@ public class ClientRequestDecoder extends ByteToMessageDecoder {
                     String host=hostAndPort.substring(0,splitIndex);
                     int port=Integer.parseInt(hostAndPort.substring(splitIndex+1));
                     Request request=new Request(host,port,buf);
-                    //todo
                     out.add(request);
                 }
         }

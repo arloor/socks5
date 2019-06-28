@@ -5,7 +5,7 @@
 sudo su
 mkdir /opt/socks5
 cd /opt/socks5
-wget -O client.jar https://github.com/arloor/socks5/releases/download/v1.0/client-3.0-jar-with-dependencies.jar
+wget -O client.jar https://github.com/arloor/socks5/releases/download/latest/client-3.0-jar-with-dependencies.jar
 
 mkdir /etc/socks5
 cat > /etc/socks5/client.json <<EOF

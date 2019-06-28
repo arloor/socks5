@@ -11,6 +11,7 @@ mkdir /etc/socks5
 cat > /etc/socks5/client.json <<EOF
 {
   "ClientPort": 6666,
+  "SpeedLimitKB": 128,
   "Use": 0,
   "Servers": [
     {

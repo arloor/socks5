@@ -5,13 +5,13 @@
 sudo su
 mkdir /opt/socks5
 cd /opt/socks5
-wget https://github.com/arloor/socks5/releases/download/v1.0/client.jar
+wget -O client.jar https://github.com/arloor/socks5/releases/download/v1.0/client-3.0-jar-with-dependencies.jar
 
 mkdir /etc/socks5
 cat > /etc/socks5/client.json <<EOF
 {
   "ClientPort": 6666,
-  "SpeedLimitKB": 128,
+  "SpeedLimitKB": 640,
   "Use": 0,
   "Servers": [
     {

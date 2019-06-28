@@ -35,6 +35,7 @@ public final class ClientBootStrap {
     private static int localPort =1080;
 
     public static int use=-1;
+    public static int SpeedLimitKB=0;
     public static String user;
     public static String pass;
     public static boolean auth;
@@ -73,6 +74,7 @@ public final class ClientBootStrap {
 
         localPort =config.getInteger("ClientPort");
         user=config.getString("User");
+        SpeedLimitKB=config.getInteger("SpeedLimitKB");
         pass=config.getString("Pass");
         auth=config.getBoolean("Auth");
         use=config.getInteger("Use");

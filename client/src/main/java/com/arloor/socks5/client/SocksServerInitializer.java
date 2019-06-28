@@ -20,12 +20,15 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.socksx.SocksPortUnificationServerHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.traffic.ChannelTrafficShapingHandler;
+
+import static com.arloor.socks5.client.ClientBootStrap.SpeedLimitKB;
 
 public final class SocksServerInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(
-                new LoggingHandler(LogLevel.DEBUG),
+                new ChannelTrafficShapingHandler(1024*SpeedLimitKB,0,1000),
                 new SocksPortUnificationServerHandler(),
                 SocksServerHandler.INSTANCE);
     }

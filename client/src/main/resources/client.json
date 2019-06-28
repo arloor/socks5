@@ -1,5 +1,6 @@
 {
   "ClientPort": 6666,
+  "SpeedLimitKB": 50,
   "Use": 0,
   "Servers": [
     {

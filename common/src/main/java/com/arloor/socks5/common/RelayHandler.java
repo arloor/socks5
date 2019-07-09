@@ -64,7 +64,7 @@ public final class RelayHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.warn(ExceptionUtil.getMessage(cause));
+        logger.warn(ctx.channel().remoteAddress()+" "+ExceptionUtil.getMessage(cause));
         ctx.close();
     }
 }

@@ -1,10 +1,10 @@
 {
   "ClientPort": 6666,
   "SpeedLimitKB": 128,
-  "Use": 1,
+  "Use": 0,
   "Servers": [
     {
-      "ProxyAddr": "hk.ddnspod.xyz",
+      "ProxyAddr": "ucloud.ddnspod.xyz",
       "ProxyPort": 80,
       "UserName": "a",
       "Password": "b"
@@ -20,3 +20,9 @@
   "Pass": "thissock5",
   "Auth":false
 }
+
+cd /opt/socks5
+rm -f server.jar
+wget -O server.jar https://github.com/arloor/socks5/releases/download/latest/server-3.0-jar-with-dependencies.jar
+service ss5-server restart
+tailf log/sogo-server/2019-07-09.log

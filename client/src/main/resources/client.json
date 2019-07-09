@@ -4,7 +4,7 @@
   "Use": 0,
   "Servers": [
     {
-      "ProxyAddr": "proxy",
+      "ProxyAddr": "ss5-server",
       "ProxyPort": 80,
       "UserName": "a",
       "Password": "b"

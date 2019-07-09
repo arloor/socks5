@@ -4,7 +4,7 @@
   "Use": 0,
   "Servers": [
     {
-      "ProxyAddr": "ucloud.ddnspod.xyz",
+      "ProxyAddr": "ss5-server",
       "ProxyPort": 80,
       "UserName": "a",
       "Password": "b"
@@ -20,9 +20,3 @@
   "Pass": "thissock5",
   "Auth":false
 }
-
-cd /opt/socks5
-rm -f server.jar
-wget -O server.jar https://github.com/arloor/socks5/releases/download/latest/server-3.0-jar-with-dependencies.jar
-service ss5-server restart
-tailf log/sogo-server/2019-07-09.log

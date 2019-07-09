@@ -87,7 +87,7 @@ public final class ClientBootStrap {
     public static void printUsage(){
         System.out.println("> Usage: java -jar xxx.jar [-c client.json]");
         System.out.println("> if \"client.json\" path is not set, it will the default client.json in classpath");
-        System.out.println("> which listen on 6666;and connect to proxy:80 whith auth: youwillneveruse/thissock5");
+        System.out.println("> which listen on 6666;and connect to ss5-server:80");
         System.out.println();
     }
 

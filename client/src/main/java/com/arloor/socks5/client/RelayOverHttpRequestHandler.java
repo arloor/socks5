@@ -15,6 +15,7 @@
  */
 package com.arloor.socks5.client;
 
+import com.arloor.socks5.common.ExceptionUtil;
 import com.arloor.socks5.common.MyBase64;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -22,11 +23,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import io.netty.util.ReferenceCountUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class RelayOverHttpRequestHandler extends ChannelOutboundHandlerAdapter {
 
     private final static String fakeHost="qtgwuehaoisdhuaishdaisuhdasiuhlassjd.com";
-
+    private static Logger logger = LoggerFactory.getLogger(RelayOverHttpRequestHandler.class.getSimpleName());
     private String targetAddr;
     private int targetPort;
     private final String basicAuth;
@@ -52,15 +55,14 @@ public final class RelayOverHttpRequestHandler extends ChannelOutboundHandlerAda
             while(content.isReadable()){
                 buf.writeByte(~content.readByte());
             }
-            ctx.writeAndFlush(buf,promise);
+            ctx.writeAndFlush(buf,promise).addListener(future -> {
+                if(!future.isSuccess()){
+                    logger.warn(ExceptionUtil.getMessage(future.cause()));
+                    ctx.close();
+                }
+            });
             ReferenceCountUtil.release(content);
         }
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
-        ctx.close();
     }
 
 

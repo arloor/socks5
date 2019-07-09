@@ -60,9 +60,11 @@ public final class DirectClientHandler extends ChannelInboundHandlerAdapter {
             ){
                 ctx.pipeline().remove("check");
                 //宣告成功
-                connected(ctx);
+                ctx.pipeline().remove(DirectClientHandler.this);
+                promise.setSuccess(ctx.channel());
             }else {
-                //todo 错误处理
+                ctx.close();
+                promise.setFailure(new Throwable("Socks5 Connect Request Consum FAILED"));
             }
         }
 
@@ -75,13 +77,9 @@ public final class DirectClientHandler extends ChannelInboundHandlerAdapter {
 
     }
 
-     private void connected(ChannelHandlerContext ctx){
-        ctx.pipeline().remove(this);
-        promise.setSuccess(ctx.channel());
-    }
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable throwable) {
         promise.setFailure(throwable);
+        ctx.close();
     }
 }

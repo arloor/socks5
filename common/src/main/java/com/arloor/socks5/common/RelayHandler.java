@@ -20,8 +20,12 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class RelayHandler extends ChannelInboundHandlerAdapter {
+
+    private static Logger logger = LoggerFactory.getLogger(RelayHandler.class.getSimpleName());
 
     private final Channel relayChannel;
 
@@ -60,7 +64,7 @@ public final class RelayHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        logger.warn(ExceptionUtil.getMessage(cause));
         ctx.close();
     }
 }

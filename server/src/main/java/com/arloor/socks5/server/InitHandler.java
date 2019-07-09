@@ -10,9 +10,9 @@ import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InitHanler extends ChannelInboundHandlerAdapter {
+public class InitHandler extends ChannelInboundHandlerAdapter {
     private SocketChannel remoteChannel;
-    private static Logger logger = LoggerFactory.getLogger(InitHanler.class.getSimpleName());
+    private static Logger logger = LoggerFactory.getLogger(InitHandler.class.getSimpleName());
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -41,7 +41,7 @@ public class InitHanler extends ChannelInboundHandlerAdapter {
                 ChannelFuture future = bootstrap.connect(request.getHost(), request.getPort());
                 future.addListener(future1 -> {
                     if (future1.isSuccess()) {
-                        ctx.pipeline().remove(InitHanler.class);
+                        ctx.pipeline().remove(InitHandler.class);
                         ctx.pipeline().addLast(new RelayPayloadHandler(remoteChannel));
 //                       System.out.println(ctx.pipeline().names());
                         ctx.channel().writeAndFlush(Unpooled.wrappedBuffer("check".getBytes()));

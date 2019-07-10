@@ -73,7 +73,6 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-Restart=always
 WorkingDirectory=/opt/socks5
 ExecStart=/usr/bin/java -jar /opt/socks5/client.jar -c /etc/socks5/client.json
 LimitNOFILE=100000
@@ -126,7 +125,6 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-Restart=always
 WorkingDirectory=/opt/socks5
 ExecStart=/usr/bin/java -jar /opt/socks5/server.jar -c /etc/socks5/server.json
 LimitNOFILE=100000

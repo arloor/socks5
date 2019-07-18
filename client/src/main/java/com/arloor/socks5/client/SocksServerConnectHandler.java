@@ -11,6 +11,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.socksx.SocksMessage;
 import io.netty.handler.codec.socksx.v4.Socks4CommandRequest;
 import io.netty.handler.codec.socksx.v5.DefaultSocks5CommandResponse;
+import io.netty.handler.codec.socksx.v5.Socks5AddressType;
 import io.netty.handler.codec.socksx.v5.Socks5CommandRequest;
 import io.netty.handler.codec.socksx.v5.Socks5CommandStatus;
 import io.netty.util.concurrent.Future;
@@ -55,6 +56,13 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
             ctx.close();
         } else if (message instanceof Socks5CommandRequest) {
             final Socks5CommandRequest request = (Socks5CommandRequest) message;
+            //禁止CONNECT域名和ipv6
+            if(!request.dstAddrType().equals(Socks5AddressType.IPv4)){
+                logger.warn("Not Ipv4: "+request.dstAddr()+":"+request.dstPort()+"  <<<<<  "+ctx.channel().remoteAddress());
+                ctx.close();
+                return;
+            }
+
             Promise<Channel> promise = ctx.executor().newPromise();
             promise.addListener(
                     new FutureListener<Channel>() {

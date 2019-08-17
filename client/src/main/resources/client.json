@@ -18,5 +18,8 @@
   ],
   "User": "youwillneveruse",
   "Pass": "thissock5",
-  "Auth":false
+  "Auth":false,
+  "SupportDomain": true,
+  "SupportIPv4": true,
+  "SupportIPv6": false
 }

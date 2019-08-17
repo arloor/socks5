@@ -5,12 +5,12 @@
   "Servers": [
     {
       "ProxyAddr": "ss5-server",
-      "ProxyPort": 80,
+      "ProxyPort": 88,
       "UserName": "a",
       "Password": "b"
     },
     {
-      "ProxyAddr": "47.74.229.210",
+      "ProxyAddr": "localhost",
       "ProxyPort": 80,
       "UserName": "a",
       "Password": "b"
@@ -18,5 +18,8 @@
   ],
   "User": "youwillneveruse",
   "Pass": "thissock5",
-  "Auth":false
+  "Auth":false,
+  "SupportDomain": true,
+  "SupportIPv4": true,
+  "SupportIPv6": false
 }

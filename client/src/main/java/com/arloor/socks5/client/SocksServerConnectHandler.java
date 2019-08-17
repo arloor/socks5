@@ -57,8 +57,8 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
         } else if (message instanceof Socks5CommandRequest) {
             final Socks5CommandRequest request = (Socks5CommandRequest) message;
             //禁止CONNECT域名和ipv6
-            if(!request.dstAddrType().equals(Socks5AddressType.IPv4)){
-                logger.warn("Not Ipv4: "+request.dstAddr()+":"+request.dstPort()+"  <<<<<  "+ctx.channel().remoteAddress());
+            if(ClientBootStrap.blockedAddressType.contains(request.dstAddrType())){
+                logger.warn("NOT support: "+request.dstAddr()+":"+request.dstPort()+"  <<<<<  "+ctx.channel().remoteAddress());
                 ctx.close();
                 return;
             }

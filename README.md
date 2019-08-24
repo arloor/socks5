@@ -61,7 +61,10 @@ cat > /etc/socks5/client.json <<EOF
   ],
   "User": "this",
   "Pass": "socks5",
-  "Auth":false
+  "Auth":false,
+  "SupportDomain": true,
+  "SupportIPv4": true,
+  "SupportIPv6": false
 }
 EOF
 

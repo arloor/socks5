@@ -1,0 +1,12 @@
+syntax = "proto3"; //指定版本，必须要写（proto3、proto2）
+message Request{
+//参数类型 参数名称=字段编码值
+string identify=1;// 协议标志
+string version=2;// 协议版本
+string appKey=3;// appKey
+int32 msgType=4;// 消息类型
+int32 direction=5;// 消息方向
+int64 msgTime=6;//消息时间
+string ack=7;//ack
+}
+

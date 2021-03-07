@@ -1,3 +1,9 @@
+# 该项目已废弃，请看：
+
+[https://github.com/arloor/HttpProxy](https://github.com/arloor/HttpProxy)
+[https://github.com/arloor/connect](https://github.com/arloor/connect)
+
+
 # socks5
 
 这是一个新的、使用netty实现的、使用http协议进行混淆的socks5代理。解决了前作[sogo](https://github.com/arloor/sogo)项目因go内存回收机制/内存复用机制弱带来的cpu/内存占用高的问题。<!--more-->
